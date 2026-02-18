@@ -2,13 +2,98 @@
 // Koordinat Larantuka, Flores Timur
 const LARANTUKA_COORDS = [-8.2718, 122.9643];
 
-let map = L.map('map').setView(LARANTUKA_COORDS, 12);
+// Inisialisasi peta dengan zoom lebih detail
+let map = L.map('map', {
+    center: LARANTUKA_COORDS,
+    zoom: 13,
+    zoomControl: true,
+    fadeAnimation: true,
+    zoomAnimation: true,
+    markerZoomAnimation: true
+});
 
-// Tambahkan tile layer OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+// ===== LAYER PETA YANG LEBIH DETAIL =====
+
+// 1. ESRI World Imagery (Citra Satelit) - Paling Detail
+const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 22,
+    maxNativeZoom: 19
+});
+
+// 2. ESRI World Topo Map (Peta Topografi Detail)
+const esriTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
+    maxZoom: 22,
+    maxNativeZoom: 18
+});
+
+// 3. ESRI World Street Map (Jalan Raya Detail)
+const esriStreet = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+    maxZoom: 22,
+    maxNativeZoom: 18
+});
+
+// 4. OpenStreetMap Humanitarian (Paling Detail untuk Jalan di Indonesia)
+const osmHumanitarian = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a>',
+    subdomains: 'abc',
+    maxZoom: 20,
+    maxNativeZoom: 19
+});
+
+// 5. OpenStreetMap Default (Alternatif)
+const osmDefault = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-    minZoom: 10
+    maxZoom: 20,
+    maxNativeZoom: 19
+});
+
+// 6. OpenTopoMap (Peta Topografi)
+const openTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    maxZoom: 18,
+    maxNativeZoom: 17
+});
+
+// 7. Stamen Terrain (Peta Medan)
+const stamenTerrain = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.png', {
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abcd',
+    maxZoom: 18,
+    minZoom: 0,
+    ext: 'png'
+});
+
+// 8. CartoDB Voyager (Peta Bersih dan Detail)
+const cartoDB = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20,
+    maxNativeZoom: 19
+});
+
+// ===== DEFAULT LAYER =====
+// Menggunakan OSM Humanitarian sebagai default (paling detail untuk Indonesia)
+osmHumanitarian.addTo(map);
+
+// ===== CONTROL LAYER =====
+const baseLayers = {
+    "🌍 OSM Humanitarian (Paling Detail)": osmHumanitarian,
+    "🗺️ OSM Default": osmDefault,
+    "🛰️ ESRI Satelit": esriSatellite,
+    "🏔️ ESRI Topografi": esriTopo,
+    "🛣️ ESRI Street Map": esriStreet,
+    "⛰️ OpenTopoMap": openTopoMap,
+    "🌲 Stamen Terrain": stamenTerrain,
+    "🗺️ CartoDB Voyager": cartoDB
+};
+
+// Tambahkan control layer ke peta
+L.control.layers(baseLayers, null, {
+    position: 'topright',
+    collapsed: false
 }).addTo(map);
 
 // ===== VARIABEL GLOBAL =====
@@ -46,7 +131,10 @@ const LOKASI_FLORES = [
     { name: "Lewoleba", lat: -8.2893, lng: 122.9882 },
     { name: "Ile Boleng", lat: -8.3522, lng: 123.0164 },
     { name: "Adonara", lat: -8.3167, lng: 123.0833 },
-    { name: "Solor", lat: -8.4667, lng: 123.0000 }
+    { name: "Solor", lat: -8.4667, lng: 123.0000 },
+    { name: "Lembata", lat: -8.4139, lng: 123.4556 },
+    { name: "Maumere", lat: -8.6186, lng: 122.2123 },
+    { name: "Ende", lat: -8.8405, lng: 121.6523 }
 ];
 
 // ===== FUNGSI PERHITUNGAN =====
@@ -58,7 +146,6 @@ const LOKASI_FLORES = [
  */
 function roundUpToNearest500k(amount) {
     // Pembulatan ke atas ke kelipatan 500.000
-    // Contoh: 433.333 → 500.000, 650.000 → 1.000.000, 1.250.000 → 1.500.000
     const roundedUp = Math.ceil(amount / 500000) * 500000;
     // Minimum Rp 500.000
     return Math.max(roundedUp, 500000);
@@ -659,27 +746,50 @@ function calculateDistance() {
         return;
     }
     
+    // Hapus routing control yang lama
     if (routingControl) {
         map.removeControl(routingControl);
     }
     
+    // Buat routing control baru dengan opsi lebih detail
     routingControl = L.Routing.control({
         waypoints: [
             L.latLng(startPoint.lat, startPoint.lng),
             L.latLng(endPoint.lat, endPoint.lng)
         ],
-        routeWhileDragging: false,
-        showAlternatives: false,
+        routeWhileDragging: true,
+        showAlternatives: true,
         fitSelectedRoutes: true,
         show: false,
         lineOptions: {
-            styles: [{color: '#2196F3', weight: 6, opacity: 0.8}]
-        }
+            styles: [
+                {color: '#2196F3', weight: 8, opacity: 0.8},
+                {color: '#ffffff', weight: 4, opacity: 0.3}
+            ]
+        },
+        altLineOptions: {
+            styles: [
+                {color: '#666', weight: 6, opacity: 0.5},
+                {color: '#ffffff', weight: 3, opacity: 0.2}
+            ]
+        },
+        router: L.Routing.osrmv1({
+            serviceUrl: 'https://router.project-osrm.org/route/v1',
+            profile: 'driving',
+            alternatives: true,
+            steps: true
+        })
     }).addTo(map);
     
+    // Event listener ketika route ditemukan
     routingControl.on('routesfound', function(e) {
         const routes = e.routes;
-        const summary = routes[0].summary;
+        // Ambil route terbaik (jarak terpendek)
+        const bestRoute = routes.reduce((prev, current) => {
+            return (prev.summary.totalDistance < current.summary.totalDistance) ? prev : current;
+        });
+        
+        const summary = bestRoute.summary;
         const jarakSebenarnya = summary.totalDistance / 1000;
         const costDetails = calculateTrontonCost(jarakSebenarnya);
         const namaAwal = getLokasiName(startPoint);
@@ -696,6 +806,7 @@ function calculateDistance() {
         );
     });
     
+    // Event listener ketika routing error
     routingControl.on('routingerror', function(e) {
         showNotification('❌ Tidak dapat menghitung rute. Coba titik lain.', 'error');
     });
@@ -705,6 +816,7 @@ function calculateDistance() {
  * Reset peta ke kondisi awal
  */
 function resetMap() {
+    // Hapus marker
     if (startMarker) {
         map.removeLayer(startMarker);
         startMarker = null;
@@ -718,9 +830,11 @@ function resetMap() {
         routingControl = null;
     }
     
+    // Reset variabel
     startPoint = null;
     endPoint = null;
     
+    // Reset UI
     document.getElementById('startCoords').innerHTML = 
         `<span class="coordinates-location">Larantuka</span>
          <span class="coordinates-numeric">-8.2718, 122.9643</span>`;
@@ -795,7 +909,8 @@ function resetMap() {
         </div>
     `;
     
-    map.setView(LARANTUKA_COORDS, 12);
+    // Reset view ke Larantuka dengan zoom lebih detail
+    map.setView(LARANTUKA_COORDS, 13);
     showNotification('🔄 Peta telah direset ke Larantuka', 'info');
 }
 
@@ -867,3 +982,9 @@ if ('serviceWorker' in navigator) {
 
 // ===== INISIALISASI AWAL =====
 setStartMarker({ lat: LARANTUKA_COORDS[0], lng: LARANTUKA_COORDS[1] });
+
+// ===== RESPONSIVE MAP =====
+// Pastikan peta menyesuaikan ukuran saat window di-resize
+window.addEventListener('resize', function() {
+    map.invalidateSize();
+});

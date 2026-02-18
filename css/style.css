@@ -1077,3 +1077,126 @@ footer {
   font-weight: bold;
   margin-left: 5px;
 }
+/* ===== CONTROL LAYER STYLES ===== */
+.leaflet-control-layers {
+  border-radius: 8px !important;
+  border: 2px solid rgba(33, 150, 243, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(5px);
+  padding: 8px !important;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.leaflet-control-layers:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.leaflet-control-layers-toggle {
+  width: 40px !important;
+  height: 40px !important;
+  background-size: 26px 26px !important;
+  background-color: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-control-layers-base label {
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.leaflet-control-layers-base label:hover {
+  background-color: var(--primary-light);
+}
+
+.leaflet-control-layers-base input[type="radio"] {
+  margin-right: 8px;
+  accent-color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* Scrollbar untuk control layer */
+.leaflet-control-layers::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leaflet-control-layers::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 3px;
+}
+
+.leaflet-control-layers::-webkit-scrollbar-thumb {
+  background: var(--gray-500);
+  border-radius: 3px;
+}
+
+.leaflet-control-layers::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* ===== PEMBULATAN KE ATAS ===== */
+.round-up-badge {
+  display: inline-block;
+  background: #4caf50;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.rounding-explanation {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 1px solid #a5d6a7;
+}
+
+.rounding-icon {
+  font-size: 1.8em;
+}
+
+.rounding-text {
+  flex: 1;
+  color: #2e7d32;
+  line-height: 1.6;
+}
+
+.minimum-tag {
+  display: inline-block;
+  background: #ff9800;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.minimum-badge-small {
+  display: inline-block;
+  background: #ff9800;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+/* ===== ROUTING LINE STYLES ===== */
+.leaflet-routing-alternatives-container {
+  display: none !important;
+}
